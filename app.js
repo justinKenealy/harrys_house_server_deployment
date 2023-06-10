@@ -67,13 +67,14 @@ app.post("/checkout", async (req, res) => {
   );
 });
 
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname, "../client/index.html"), function (err) {
-    if (err) {
-      res.status(500).send(err);
-    }
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path')
+  app.use(express.static(path.join(__dirname, 'dist')));
+
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
   });
-});
+}
 
 app.listen(PORT, () => {
   console.log("Listening on port", PORT);
